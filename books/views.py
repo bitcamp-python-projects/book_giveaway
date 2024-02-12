@@ -3,6 +3,7 @@ from .models import Book, WishList
 from .serializers import BookSerializer, BookDetailSerializer, WishListSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from .permissions import  WishListPermission, IsOwnerOrAdministrator
 
 # წიგნების სახელწოდებები
 class BookViewSet(viewsets.ModelViewSet):
@@ -16,11 +17,11 @@ class BookViewSet(viewsets.ModelViewSet):
 class BookDetailViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookDetailSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrAdministrator]
 
 # სასურველი წიგნების ცრილი
 class WishListViewSet(viewsets.ModelViewSet):
     queryset = WishList.objects.all()
     serializer_class = WishListSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [WishListPermission] #სპეციალური პერმიშენი ვიშლისტისთვის
   
