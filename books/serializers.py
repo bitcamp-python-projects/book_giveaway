@@ -5,19 +5,19 @@ from rest_framework import serializers
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
-        fields = fields = "__all__"
+        fields = "__all__"
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = fields = "__all__"
+        fields = "__all__"
 
 
 class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
-        fields = fields = "__all__"
+        fields = "__all__"
 
 
 class BookSerializer(serializers.ModelSerializer):
