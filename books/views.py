@@ -10,11 +10,11 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
+
 # წიგნების სახელწოდებები
-class BookViewSet(viewsets.ReadOnlyModelViewSet): # ეს ვიუსეტი მარტო კითხვის ფუნქციას რთავს, ამას თუ დავწერთ ფერმიშენი არც დაგვჭირდება
-    queryset = Book.objects.all()   #ეს ვიუსეტი ხომ მარტო უნდა გამოიტანოს ლისტის სახით ყველასთვის ხელმისაწვდომად
+class BookViewSet(viewsets.ReadOnlyModelViewSet): 
+    queryset = Book.objects.all()   
     serializer_class = BookSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly] # ამიტომ ეს ველი აღარ დაგვჭირდება
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['author', 'genre', 'condition', 'owner']
     search_fields = ['title']
@@ -35,11 +35,17 @@ class WishListViewSet(viewsets.ModelViewSet):
 
 # ავტორიზაცია მეილით
 class LoginView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         email = request.data.get('email')
+        username = request.data.get('username')
         password = request.data.get('password')
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, email=email, password=password)
+        # print("Received email:", username)  # Debugging statement
+        # print("Received password:", password)  # Debugging statement
+        # print("Received password:", user)
         if user:
+            print("Received password:", user)
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),

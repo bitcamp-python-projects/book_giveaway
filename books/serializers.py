@@ -1,4 +1,4 @@
-from .models import Book, WishList, Author, Genre, Condition
+from .models import Book, WishList, Author, Genre, Condition, CustomUser
 from rest_framework import serializers
 
 
@@ -36,3 +36,5 @@ class WishListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WishList
         fields = "__all__"
+
+
