@@ -35,6 +35,9 @@ class BookDetailSerializer(serializers.ModelSerializer):
 class WishListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WishList
-        fields = "__all__"
+        fields = ['book', 'status']
 
-
+    def create(self, validated_data):
+        # Set the user field to the user who sent the request
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)

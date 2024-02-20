@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 
 # წიგნების სახელწოდებები
@@ -36,20 +37,23 @@ class WishListViewSet(viewsets.ModelViewSet):
 # ავტორიზაცია მეილით
 class LoginView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]  # Add TokenAuthentication
+
     def post(self, request):
         email = request.data.get('email')
         username = request.data.get('username')
         password = request.data.get('password')
-        user = authenticate(request, username=username, email=email, password=password)
-        # print("Received email:", username)  # Debugging statement
-        # print("Received password:", password)  # Debugging statement
-        # print("Received password:", user)
+        
+        # Authenticate user
+        
+        user = authenticate(username=username, password=password)
+    
+        
         if user:
-            print("Received password:", user)
-            refresh = RefreshToken.for_user(user)
+            # Generate or retrieve token
+            token, created = Token.objects.get_or_create(user=user)
             return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'token': token.key,
             })
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
