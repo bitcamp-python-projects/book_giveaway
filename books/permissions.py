@@ -1,17 +1,19 @@
 from rest_framework import permissions
 
-class IsOwnerOrAdministrator(permissions.BasePermission):
+class IsOwnerOrStaffForPatch(permissions.BasePermission):
     """
-    Only allow book owners or administrators actions.
+    wishlistis permission nebas rTavs path requesti gamogzavnos mxolod adminebma da wignis mflobelebma.
     """
 
-    def has_object_permission(self, request, view, obj):
-        user = request.user
-        if user.role == 'administrator':
+    def has_permission(self, request, view):
+        # Check if the request method is PATCH
+        if request.method == 'PATCH':
             return True
-        elif user.role == 'owner':
-            return obj.owner == user
         return False
+
+    def has_object_permission(self, request, view, obj):
+        # 
+        return obj.book.owner == request.user or request.user.is_staff
 
 class WishListPermission(permissions.BasePermission):
     """
