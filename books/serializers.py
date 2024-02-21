@@ -18,18 +18,18 @@ class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
         fields = "__all__"
-
-
 class BookSerializer(serializers.ModelSerializer):
+    pickup_location = serializers.CharField(write_only=True)  # Allow pickup_location to be written during POST
+
     class Meta:
         model = Book
-        fields = ['title']
+        fields = ["title", "author", "genre", "condition", "owner","pickup_location"]  # Exclude pickup_location from fields option
+        read_only_fields = ['owner']
+    def create(self, validated_data):
+        # iuseris fields gautolebs requestis gamomgzavn users 
+        validated_data['owner'] = self.context['request'].user
+        return super().create(validated_data)
 
-
-class BookDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = "__all__"
 
 
 class WishListSerializer(serializers.ModelSerializer):
