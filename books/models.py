@@ -54,9 +54,11 @@ class WishList(models.Model):  # სასურველი წიგნებ�
         ('pending', 'pending'), # სანამ owner დაასაბმითებს ვის მისცეს წიგნი როცა რამდენიმე მოთხოვნაა
         ('submitted', 'submitted'),  # მას შემდეგ რაც owner აირჩევს ადრესატს
     )
-    user = models.ManyToManyField(CustomUser) 
-    book = models.ManyToManyField(Book)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return f"{self.user} - {self.book}"
+    
+    
