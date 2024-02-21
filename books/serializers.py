@@ -33,9 +33,10 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
 
 class WishListSerializer(serializers.ModelSerializer):
+    pickup_location = serializers.SerializerMethodField()
     class Meta:
         model = WishList
-        fields = ['id', 'user', 'book', 'status']
+        fields = ['id', 'user', 'book', 'status', 'pickup_location']
         read_only_fields = ['user']
 
     def create(self, validated_data):
@@ -48,6 +49,14 @@ class WishListSerializer(serializers.ModelSerializer):
         representation['user'] = instance.user.username
         representation['book'] = instance.book.title
         return representation
+    
+    def get_pickup_location(self, obj):
+        user = self.context['request'].user
+        if (obj.book.owner == user or user.is_staff):
+            return obj.book.pickup_location
+        else:
+            return "Access Forbidden"
+    
     
     def update(self, instance, validated_data):
         # axdens ganaxlebas

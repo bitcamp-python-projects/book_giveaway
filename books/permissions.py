@@ -10,7 +10,7 @@ class IsOwnerOrStaffForPatch(permissions.BasePermission):
         if request.method == 'PATCH':
             return True
         return False
-
+    
     def has_object_permission(self, request, view, obj):
         # 
         return obj.book.owner == request.user or request.user.is_staff
