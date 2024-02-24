@@ -17,11 +17,11 @@ class IsOwnerOrStaffForPatch(permissions.BasePermission):
 
 class WishListPermission(permissions.BasePermission):
     """
-    ვიშლისტის პერმიშენი
+    Wishlist permission
     """
 
     def has_permission(self, request, view):
-        # მარტო ავტორიზირებულებს შეუძლიათ პოსტ მეეთოდის გაგზავნა
+        # Only authenticates users can send POST request 
         if request.method == 'POST':
             return request.user.is_authenticated
         
@@ -30,15 +30,15 @@ class WishListPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         user = request.user
         print(obj)
-        # ადმინებს შეუძლიათ ყველაფერი
+        # Admins can everything 
         if user.role == 'administrator':
             return True
 
-        # მარტო მფლობელებს შეუძლიათ submit სტატუსის მინიჭება
+        # Only owners can add SUBMIT status 
         if user.role == 'owner':
             if request.method in permissions.SAFE_METHODS:
-                return True  # ნებას რთავს read-only actions
+                return True  # Allows read-only actions
             return obj.user == user and obj.status == 'pending'
 
-        # წვდომას უზღუდავს ყველა სხვას
+        # Disrupts access for everyone
         return False

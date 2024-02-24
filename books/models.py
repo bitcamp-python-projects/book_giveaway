@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-class CustomUser(AbstractUser):  # აქ როლები განვსაზღვრე
+class CustomUser(AbstractUser):  # Define roles for users
     ROLE_CHOICES = (
         ('administrator', 'Administrator'),
         ('owner', 'Owner'),
@@ -15,28 +15,28 @@ class CustomUser(AbstractUser):  # აქ როლები განვსა�
         return self.username
 
 
-class Author(models.Model):  # ავტორების მოდელი
+class Author(models.Model):  # Books' auhors' model
     author = models.CharField(max_length=100)
 
     def __str__(self):
         return self.author
 
 
-class Condition(models.Model):  # წიგნის მდგომარეობის მოდელი (მაგ. ახალი, ძველი)
+class Condition(models.Model):  # Book's condition (new, old, ect.)
     condition = models.CharField(max_length=100)
 
     def __str__(self):
         return self.condition
 
 
-class Genre(models.Model):  # ჟანრები
+class Genre(models.Model):  # Books' genres
     title = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
 
 
-class Book(models.Model):  # წიგნების მოდელი
+class Book(models.Model):  # Books model
     title = models.CharField(max_length=50)
     author = models.ManyToManyField(Author)
     genre = models.ManyToManyField(Genre)
@@ -49,10 +49,10 @@ class Book(models.Model):  # წიგნების მოდელი
         return self.title
 
 
-class WishList(models.Model):  # სასურველი წიგნების მოდელი
-    STATUS_CHOICES = (  # განსაზღვრულია როლ სტატუსები 
-        ('pending', 'pending'), # სანამ owner დაასაბმითებს ვის მისცეს წიგნი როცა რამდენიმე მოთხოვნაა
-        ('submitted', 'submitted'),  # მას შემდეგ რაც owner აირჩევს ადრესატს
+class WishList(models.Model):  # Wishlist model
+    STATUS_CHOICES = (  # Defines status choices:
+        ('pending', 'pending'), # pending - before owner sumbites where there're more requests then one
+        ('submitted', 'submitted'),  # submitted - after the owner chose
     )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
     book = models.ForeignKey(Book, on_delete=models.CASCADE)

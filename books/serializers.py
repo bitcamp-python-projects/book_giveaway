@@ -1,4 +1,5 @@
 from .models import Book, WishList, Author, Genre, Condition, CustomUser
+# from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers
 
 
@@ -13,11 +14,11 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
         fields = "__all__"
 
-
 class ConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
         fields = "__all__"
+        
 class BookSerializer(serializers.ModelSerializer):
     pickup_location = serializers.CharField(write_only=True)  # Allow pickup_location to be written during POST
 
@@ -29,8 +30,6 @@ class BookSerializer(serializers.ModelSerializer):
         # iuseris fields gautolebs requestis gamomgzavn users 
         validated_data['owner'] = self.context['request'].user
         return super().create(validated_data)
-
-
 
 class WishListSerializer(serializers.ModelSerializer):
     pickup_location = serializers.SerializerMethodField()
@@ -71,3 +70,15 @@ class WishListSerializer(serializers.ModelSerializer):
                 first_book.save()
 
         return instance
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer): # User registration by username, email and password
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password']
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
