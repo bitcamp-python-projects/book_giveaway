@@ -1,5 +1,7 @@
 
 from rest_framework import viewsets, filters, status
+from books.filters import BookFilter, CustomSearchFilter
+from rest_framework.filters import OrderingFilter
 from .models import Book, WishList
 from .serializers import BookSerializer, WishListSerializer, UserRegistrationSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,9 +20,9 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()   
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['author', 'genre', 'condition', 'owner']
-    search_fields = ['title']
+    filter_backends = [DjangoFilterBackend, CustomSearchFilter, OrderingFilter]
+    filterset_class = BookFilter
+    search_fields = ['title', 'author__name', 'genre__name', 'condition__name', 'owner__username']
 
 
 

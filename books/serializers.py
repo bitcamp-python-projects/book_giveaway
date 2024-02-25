@@ -20,6 +20,23 @@ class ConditionSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
 class BookSerializer(serializers.ModelSerializer):
+
+    author = serializers.SlugRelatedField(
+        many=True,
+        queryset=Author.objects.all(),
+        slug_field='author'  # Assuming 'author' is the field in the Author model to display
+    )
+    genre = serializers.SlugRelatedField(
+        many=True,
+        queryset=Genre.objects.all(),
+        slug_field='title'  # Assuming 'title' is the field in the Genre model to display
+    )
+    condition = serializers.SlugRelatedField(
+        many=True,
+        queryset=Condition.objects.all(),
+        slug_field='condition'  # Assuming 'condition' is the field in the Condition model to display
+    )
+    
     pickup_location = serializers.CharField(write_only=True)  # Allow pickup_location to be written during POST
 
     class Meta:
